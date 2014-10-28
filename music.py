@@ -15,43 +15,39 @@ class Song:
 
 	_magic_number = 2**(1/12)
 	_base_frequency = 261.626 # middle C
-	_whole_note_length = 2000 # 2 seconds
 
-	def __init__(self, notes, lengths):
+	def __init__(self, notes, lengths, whole_note_length=2000):
 		self.notes = notes
 		self.lengths = lengths
 		self.frequencies = []
 		self.miliseconds = []
+		self.whole_note_length = whole_note_length
 		self.parse()
 
 	def parse(self):
 		for note, length  in zip(self.notes.split(), self.lengths.split()):
-			self.frequencies.append(self._calculate_frequency(note))
+			self.frequencies.append(self._calculate_frequency(note.lower()))
 			self.miliseconds.append(self._calculate_miliseconds(length))
 
 	def play(self):
 		for frequency, miliseconds in zip(self.frequencies, self.miliseconds):
-			winsound.Beep(frequency, miliseconds)
+			if not frequency: time.sleep(miliseconds)
+			else: winsound.Beep(frequency, miliseconds)
 
 	def _calculate_frequency(self, note):
-		if note.strip('+-#b').lower() == 'R': return None
-		steps = self._steps[note.strip('+-#b').lower()]
-		if '-' in note:
-			n = note.count('-')
-			steps -= 12 * n
-		elif '+' in note:
-			n = note.count('+')
-			steps += 12 * n
-		if 'b' in note:
-			steps -= note.count('b')
-		if '#' in note:
-			steps += note.count('#')
+		if note.strip('+-#b') == 'r': return None
+		steps = self._steps[note.strip('+-#b')]
+		steps -= 12 * note.count('-')
+		steps += 12 * note.count('+')
+		steps -= note.count('b')
+		steps += note.count('#')
 		return int(self._base_frequency * (self._magic_number**steps))
 
 	def _calculate_miliseconds(self, length):
+		i = int(length.strip('.'))
 		if '.' in length:
-			return int(2000 / int((int(length.strip('.'))<<int(1)) + int(length.strip('.'))/2))
-		return int(self._whole_note_length / int(length))
+			return int(self.whole_note_length /i*3/2))
+		return int(self.whole_note_length / i)
 
 	def morse(s):
 		for i in s:
