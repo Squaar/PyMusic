@@ -1,15 +1,7 @@
 import winsound
 import time
 
-class SongPlayer:
-
-	lengths = {
-		'16': 125,
-		'8':  250,
-		'4':  500,
-		'2':  1000,
-		'1':  2000
-	}
+class Song:
 
 	_steps = {
 		'a': 9,
@@ -23,12 +15,22 @@ class SongPlayer:
 
 	_magic_number = 2**(1/12)
 	_base_frequency = 261.626 # middle C
-	_whole_note_length = 2000
+	_whole_note_length = 2000 # 2 seconds
 
-	def play(self, song):
-		for note, length  in zip(song.notes.split(), song.lengths.split()):
-			frequency = self._calculate_frequency(note)
-			miliseconds = self._calculate_miliseconds(length)
+	def __init__(self, notes, lengths):
+		self.notes = notes
+		self.lengths = lengths
+		self.frequencies = []
+		self.miliseconds = []
+		self.parse()
+
+	def parse(self):
+		for note, length  in zip(self.notes.split(), self.lengths.split()):
+			self.frequencies.append(self._calculate_frequency(note))
+			self.miliseconds.append(self._calculate_miliseconds(length))
+
+	def play(self):
+		for frequency, miliseconds in zip(self.frequencies, self.miliseconds):
 			winsound.Beep(frequency, miliseconds)
 
 	def _calculate_frequency(self, note):
@@ -61,12 +63,6 @@ class SongPlayer:
 				pass
 			time.sleep(.01)
 
-class Song:
-
-	def __init__(self, notes, lengths):
-		self.notes = notes
-		self.lengths = lengths
-
 star_wars = Song(
 	'D D D G D+ C+ B A G+ D+ C+ B A G+ D+ C+ B C+ A',
 	'8 8 8 2 2  8  8 8 2  4  8  8 8 2  4  8  8 8  2'
@@ -87,8 +83,8 @@ chromatic = Song(
 	'4 '*13
 )
 
-# SongPlayer().play(star_wars)
-# SongPlayer().play(elder_scrolls)
-# SongPlayer().play(scale)
-# SongPlayer().play(chromatic)
-# morse('...---...-.-.')
+# star_wars.play()
+# elder_scrolls.play()
+# scale.play()
+# chromatic.play()
+# Song.morse('...---...-.-.')
