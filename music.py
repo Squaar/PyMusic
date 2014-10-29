@@ -4,13 +4,13 @@ import time
 class Song:
 
 	_steps = {
-		'a': 9,
-		'b': 11,
-		'c': 0,
-		'd': 2,
-		'e': 4,
-		'f': 5,
-		'g': 7
+		'A': 9,
+		'B': 11,
+		'C': 0,
+		'D': 2,
+		'E': 4,
+		'F': 5,
+		'G': 7
 	}
 
 	_magic_number = 2**(1/12)
@@ -26,7 +26,7 @@ class Song:
 
 	def parse(self):
 		for note, length  in zip(self.notes.split(), self.lengths.split()):
-			self.frequencies.append(self._calculate_frequency(note.lower()))
+			self.frequencies.append(self._calculate_frequency(note))
 			self.miliseconds.append(self._calculate_miliseconds(length))
 
 	def play(self):
@@ -46,7 +46,7 @@ class Song:
 	def _calculate_miliseconds(self, length):
 		i = int(length.strip('.'))
 		if '.' in length:
-			return int(self.whole_note_length /i*3/2))
+			return int(self.whole_note_length /i*3/2)
 		return int(self.whole_note_length / i)
 
 	def morse(s):
@@ -79,7 +79,7 @@ chromatic = Song(
 	'4 '*13
 )
 
-# star_wars.play()
+star_wars.play()
 # elder_scrolls.play()
 # scale.play()
 # chromatic.play()
