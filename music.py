@@ -1,5 +1,6 @@
 import winsound
 import time
+from fractions import Fraction
 
 class Song:
 
@@ -31,11 +32,12 @@ class Song:
 
 	def play(self):
 		for frequency, miliseconds in zip(self.frequencies, self.miliseconds):
-			if not frequency: time.sleep(miliseconds)
+			if not frequency: time.sleep(miliseconds/1000)
 			else: winsound.Beep(frequency, miliseconds)
+			# time.sleep(0.1)
 
 	def _calculate_frequency(self, note):
-		if note.strip('+-#b') == 'r': return None
+		if note.strip('+-#b') == 'R': return None
 		steps = self._steps[note.strip('+-#b')]
 		steps -= 12 * note.count('-')
 		steps += 12 * note.count('+')
@@ -44,7 +46,7 @@ class Song:
 		return int(self._base_frequency * (self._magic_number**steps))
 
 	def _calculate_miliseconds(self, length):
-		i = int(length.strip('.'))
+		i = float(Fraction(length.strip('.')))
 		if '.' in length:
 			return int(self.whole_note_length /i*3/2)
 		return int(self.whole_note_length / i)
@@ -59,28 +61,5 @@ class Song:
 				pass
 			time.sleep(.01)
 
-star_wars = Song(
-	'D D D G D+ C+ B A G+ D+ C+ B A G+ D+ C+ B C+ A',
-	'8 8 8 2 2  8  8 8 2  4  8  8 8 2  4  8  8 8  2'
-)
 
-elder_scrolls = Song(
-	'C D Eb Eb F G G Bb F  G  F  Eb D C C D Eb Eb F G G Bb C+ Bb D+ C+ C+ D+ Eb+ D+ C+ Bb Ab G F  Eb G F Eb D C',
-	'8 8 2  8  8 2 8 8  2. 16 16 8  8 4 8 8 2  8  8 2 8 8  2  8. 16 2  8. 16 4   4  4  4  4  4 2. 8  8 2 8  8 2'
-)
 
-scale = Song(
-	'C D E F G A B C+',
-	'4 '*8
-)
-
-chromatic = Song(
-	'C C# D Eb E F F# G Ab A Bb B C+',
-	'4 '*13
-)
-
-star_wars.play()
-# elder_scrolls.play()
-# scale.play()
-# chromatic.play()
-# Song.morse('...---...-.-.')
