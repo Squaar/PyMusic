@@ -1,4 +1,4 @@
-from music import Song
+from .music import Song
 
 star_wars = Song(
 	'D D D G D+ C+ B A G+ D+ C+ B A G+ D+ C+ B C+ A',
@@ -34,12 +34,3 @@ chromatic = Song(
 	'C C# D Eb E F F# G Ab A Bb B C+',
 	'4 '*13
 )
-
-# star_wars.play()
-# elder_scrolls.play()
-# green_greens.play()
-mario.play()
-# pokemon.play()
-# scale.play()
-# chromatic.play()
-# Song.morse('...---...-.-.')
